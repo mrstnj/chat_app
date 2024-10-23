@@ -1,5 +1,6 @@
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/material.dart';
-// import 'api_key.dart';
+import 'api_key.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,9 +32,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final openAI = OpenAI.instance.build(
+    token: writeYourOpenAPIKey,
+    enableLog: true,
+  );
 
   final _textEditingController = TextEditingController();
-  var _answer = 'aa';
+  var _answer = '';
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +54,24 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               children: [
                 Expanded(child: TextField(controller: _textEditingController )),
-                IconButton(onPressed: (){}, icon: Icon(Icons.send)),
+                IconButton(onPressed: () async {
+                  final answer = await _sendMessage(_textEditingController.text);
+                  setState(() {
+                    _answer = answer;
+                  });
+                }, icon: Icon(Icons.send)),
             ]),
             Text(_answer),
           ],
         ),
       ),
     );
+  }
+
+  Future<String> _sendMessage(String message) async {
+    final request = CompleteText(prompt: message, model: Gpt3TurboInstruct(), maxTokens: 200);
+  
+    final response = await openAI.onCompletion(request: request);
+    return response!.choices.first.text;
   }
 }
