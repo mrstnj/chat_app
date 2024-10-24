@@ -15,6 +15,9 @@ class Message {
   final String message;
   final bool fromChatGpt;
   final DateTime sendTime;
+
+  Message.waitResponse(DateTime now)
+    :this('', DateTime.now(), fromChatGpt: true);
 }
 
 class MyApp extends StatelessWidget {
@@ -49,35 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
   );
 
   final _textEditingController = TextEditingController();
-  var _answer = '';
+  final _scrollController = ScrollController();
 
-  final _messages = <Message>[
-    Message("お疲れ様！今日はどうだった？", DateTime(2024, 10, 23, 0, 0), fromChatGpt: false),
-    Message("お疲れ様！今日はちょっとバタバタしてたけど、無事終わったよ。", DateTime(2024, 10, 23, 1, 0),
-        fromChatGpt: true),
-    Message("おー、よかったね！仕事終わりになんか予定あるの？", DateTime(2024, 10, 23, 2, 0),
-        fromChatGpt: false),
-    Message("特にないかなー。家でNetflixでも見ようかなって。", DateTime(2024, 10, 23, 3, 0),
-        fromChatGpt: true),
-    Message("Netflixいいね！最近面白いのあった？", DateTime(2024, 10, 23, 4, 0),
-        fromChatGpt: false),
-    Message("「ワンピース」の実写版見たけど、思ったより良かったよ！", DateTime(2024, 10, 23, 5, 0),
-        fromChatGpt: true),
-    Message("マジ？原作ファンだからちょっと不安だったんだけど、見る価値ある？", DateTime(2024, 10, 23, 6, 0),
-        fromChatGpt: false),
-    Message("あると思う！設定も忠実だし、キャストも結構頑張ってる感じ。", DateTime(2024, 10, 23, 7, 0),
-        fromChatGpt: true),
-    Message("じゃあ、週末に見てみようかな。おすすめありがとう！", DateTime(2024, 10, 23, 8, 0),
-        fromChatGpt: false),
-    Message("ぜひぜひ！感想も聞かせてねー。", DateTime(2024, 10, 23, 9, 0),
-        fromChatGpt: true),
-  ];
+  bool _isLoading = false;
+  final _messages = <Message>[];
 
   static Color colorBackground = Color.fromARGB(0xFF, 0x90, 0xac, 0xd7);
   static Color colorMyMessage = Color.fromARGB(0xFF, 0x8a, 0xe1, 0x7e);
   static Color colorOthersMessage = Color.fromARGB(0xFF, 0xff, 0xff, 0xff);
   static Color colorTime = Color.fromARGB(0xFF, 0x72, 0x88, 0xa8);
   static Color colorAvator = Color.fromARGB(0xFF, 0x76, 0x5a, 0x44);
+  static Color colorInput = Color.fromARGB(0xFF, 0xff, 0xff, 0xff);
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
+                  final showLoadingIcon =
+                    _isLoading && index == _messages.length - 1;
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -138,10 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    message.message,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
+                                  child: showLoadingIcon
+                                    ? const CircularProgressIndicator()
+                                    : Text(
+                                      message.message,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                                 ),
                               ),
                             ),
@@ -159,19 +149,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 })
               ),
-            Row(children: [
-              Expanded(child: TextField(controller: _textEditingController)),
-              IconButton(
-                  onPressed: () async {
-                    final answer =
-                        await _sendMessage(_textEditingController.text);
-                    setState(() {
-                      _answer = answer;
-                    });
-                  },
-                  icon: Icon(Icons.send)),
-            ]),
-            Text(_answer),
+            Container(
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: TextStyle(fontSize: 14),
+                      controller: _textEditingController,
+                      decoration: InputDecoration(
+                        fillColor: colorInput,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)
+                        )
+                      )
+                    )
+                  ),
+                  IconButton(
+                      onPressed: _isLoading
+                        ? null
+                        : () async {
+                          _onTapSend(_textEditingController.text);
+                        },
+                      icon: Icon(Icons.send, color: _isLoading ? Colors.grey : Colors.black)),
+                ]),
+            ),
           ],
         ),
       ),
@@ -182,11 +185,37 @@ class _MyHomePageState extends State<MyHomePage> {
     return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
+  void _onTapSend(String userMessage){
+    setState(() {
+      _isLoading = true;
+      _messages.addAll([
+        Message(userMessage, DateTime.now(), fromChatGpt: false),
+        Message.waitResponse(DateTime.now())
+      ]);
+    });
+
+    _sendMessage(userMessage).then((chatGptMessage){
+      setState(() {
+        _messages.last = Message(chatGptMessage.trim(), DateTime.now(), fromChatGpt: true);      
+        _isLoading = false;
+      });
+      _ScrollDown();
+    });
+  }
+
   Future<String> _sendMessage(String message) async {
     final request = CompleteText(
         prompt: message, model: Gpt3TurboInstruct(), maxTokens: 200);
 
     final response = await openAI.onCompletion(request: request);
     return response!.choices.first.text;
+  }
+
+  void _ScrollDown(){
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(microseconds: 500),
+        curve: Curves.fastOutSlowIn);
+    });
   }
 }
