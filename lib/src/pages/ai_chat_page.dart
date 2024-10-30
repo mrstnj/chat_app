@@ -1,7 +1,7 @@
-import 'package:chatapp/src/viewmodels/ai_chat_view_model.dart';
+import 'package:chatapp/src/viewmodels/loading_view_model.dart';
+import 'package:chatapp/src/viewmodels/message_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../uistates/message_ui_state.dart';
 
 class AiChatPage extends StatelessWidget {
   const AiChatPage({super.key});
@@ -19,8 +19,9 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(chatMessagesProvider);
-    final isLoading = ref.watch(chatStateProvider);
+    final messageViewModel = ref.read(messageViewModelProvider.notifier);
+    final messages = ref.watch(messageViewModelProvider);
+    final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     final _textEditingController = TextEditingController();
     final _scrollController = ScrollController();
@@ -131,28 +132,7 @@ class _Body extends ConsumerWidget {
                             final message = _textEditingController.text;
                             if (message.trim().isNotEmpty) {
                               _textEditingController.clear();
-                              // ref
-                              //     .read(chatStateProvider.notifier)
-                              //     .setLoading(true);
-                              ref
-                                  .read(chatMessagesProvider.notifier)
-                                  .addMessage(
-                                    Message(
-                                      message: message,
-                                      sendTime: DateTime.now(),
-                                      fromChatGpt: false,
-                                    ),
-                                  );
-                              ref
-                                  .read(chatMessagesProvider.notifier)
-                                  .addMessage(
-                                    Message(
-                                      message: '',
-                                      sendTime: DateTime.now(),
-                                      fromChatGpt: true,
-                                    ),
-                                  );
-                              ref.read(sendMessageProvider(message));
+                              messageViewModel.sendMessage(message);
                             }
                           },
                     icon: Icon(Icons.send,
