@@ -14,6 +14,15 @@ class AiChatPage extends StatelessWidget {
   }
 }
 
+final _scrollController = ScrollController();
+void _ScrollDown() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(microseconds: 500),
+        curve: Curves.fastOutSlowIn);
+  });
+}
+
 class _Body extends ConsumerWidget {
   const _Body();
 
@@ -24,7 +33,6 @@ class _Body extends ConsumerWidget {
     final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     final _textEditingController = TextEditingController();
-    final _scrollController = ScrollController();
 
     final Color colorMyMessage = Color.fromARGB(0xFF, 0x8a, 0xe1, 0x7e);
     final Color colorOthersMessage = Color.fromARGB(0xFF, 0xff, 0xff, 0xff);
@@ -133,6 +141,7 @@ class _Body extends ConsumerWidget {
                             if (message.trim().isNotEmpty) {
                               _textEditingController.clear();
                               messageViewModel.sendMessage(message);
+                              _ScrollDown();
                             }
                           },
                     icon: Icon(Icons.send,
@@ -144,30 +153,4 @@ class _Body extends ConsumerWidget {
       ),
     );
   }
-
-  // void _onTapSend(String userMessage){
-  //   setState(() {
-  //     _isLoading = true;
-  //     _messages.addAll([
-  //       Message(userMessage, DateTime.now(), fromChatGpt: false),
-  //       Message.waitResponse(DateTime.now())
-  //     ]);
-  //   });
-
-  //   _sendMessage(userMessage).then((chatGptMessage){
-  //     setState(() {
-  //       _messages.last = Message(chatGptMessage.trim(), DateTime.now(), fromChatGpt: true);
-  //       _isLoading = false;
-  //     });
-  //     _ScrollDown();
-  //   });
-  // }
-
-  // void _ScrollDown(){
-  //   WidgetsBinding.instance.addPostFrameCallback((_){
-  //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-  //       duration: const Duration(microseconds: 500),
-  //       curve: Curves.fastOutSlowIn);
-  //   });
-  // }
 }
