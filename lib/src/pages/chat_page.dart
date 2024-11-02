@@ -1,10 +1,10 @@
 import 'package:chatapp/src/viewmodels/loading_view_model.dart';
-import 'package:chatapp/src/viewmodels/ai_message_view_model.dart';
+import 'package:chatapp/src/viewmodels/message_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AiChatPage extends StatelessWidget {
-  const AiChatPage({super.key});
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,10 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messageViewModel = ref.read(aiMessageViewModelProvider.notifier);
-    final messages = ref.watch(aiMessageViewModelProvider);
+    final asyncMessages = ref.watch(getAllMessagesProvider);
+    print(asyncMessages);
+    // final messageViewModel = ref.read(messageViewModelProvider.notifier);
+    final messages = ref.watch(messageViewModelProvider);
     final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     final _textEditingController = TextEditingController();
@@ -47,7 +49,7 @@ class _Body extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('chatGPT'),
+        title: const Text('Person'),
       ),
       body: Center(
         child: Column(
@@ -140,7 +142,7 @@ class _Body extends ConsumerWidget {
                             final message = _textEditingController.text;
                             if (message.trim().isNotEmpty) {
                               _textEditingController.clear();
-                              messageViewModel.sendMessage(message);
+                              // messageViewModel.sendMessage(message);
                               _ScrollDown();
                             }
                           },

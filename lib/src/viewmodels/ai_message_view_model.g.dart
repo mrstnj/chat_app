@@ -7,12 +7,12 @@ part of 'ai_message_view_model.dart';
 // **************************************************************************
 
 String _$aiMessageViewModelHash() =>
-    r'9251074c6b275bace91f3b16087712dc1d52a1af';
+    r'beff7ed518737344804a1fb7297ed45e753aa91b';
 
 /// See also [AiMessageViewModel].
 @ProviderFor(AiMessageViewModel)
 final aiMessageViewModelProvider =
-    AutoDisposeNotifierProvider<AiMessageViewModel, List<AiMessage>>.internal(
+    AutoDisposeNotifierProvider<AiMessageViewModel, List<Message>>.internal(
   AiMessageViewModel.new,
   name: r'aiMessageViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final aiMessageViewModelProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AiMessageViewModel = AutoDisposeNotifier<List<AiMessage>>;
+typedef _$AiMessageViewModel = AutoDisposeNotifier<List<Message>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

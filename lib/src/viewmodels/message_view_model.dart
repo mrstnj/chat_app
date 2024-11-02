@@ -1,15 +1,32 @@
-import 'package:chatapp/src/viewmodels/loading_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import '../uistates/message_ui_state.dart';
-import '../services/ai_chat_service.dart';
 
 part 'message_view_model.g.dart';
+
+final getAllMessagesProvider = FutureProvider<List<Message>>((ref) async {
+  final dio = Dio();
+  try {
+    final response = await dio.get<List<dynamic>>("http://10.0.2.2:3000/get_messages/v1");
+    final List<Message> messages = (response.data as List<dynamic>).map((item) {
+      return Message.fromJson(item);
+    }).toList();
+    return messages;   
+  } catch (e) {
+    throw Exception('エラーが発生しました');
+  }
+});
 
 @riverpod
 class MessageViewModel extends _$MessageViewModel {
   @override
   List<Message> build() {
+    ref.listen(getAllMessagesProvider, (previous, next) {
+      next.whenData((messages) {
+        state = messages;
+      });
+    });
     return const <Message>[];
   }
 
@@ -19,51 +36,5 @@ class MessageViewModel extends _$MessageViewModel {
 
   void updateLastMessage(Message message) {
     state = [...state.sublist(0, state.length - 1), message];
-  }
-
-  Future<void> sendMessage(String message) async {
-    if (message.trim().isEmpty) return;
-
-    final loadingViewModel = ref.read(loadingViewModelProvider.notifier);
-    final chatService = ref.read(aiChatServiceProvider);
-
-    loadingViewModel.setLoading(true);
-
-    addMessage(
-      Message(
-        message: message,
-        sendTime: DateTime.now(),
-        fromChatGpt: false,
-      ),
-    );
-
-    addMessage(
-      Message(
-        message: '',
-        sendTime: DateTime.now(),
-        fromChatGpt: true,
-      ),
-    );
-
-    try {
-      final response = await chatService.sendMessage(message);
-      updateLastMessage(
-        Message(
-          message: response.trim(),
-          sendTime: DateTime.now(),
-          fromChatGpt: true,
-        ),
-      );
-    } catch (e) {
-      updateLastMessage(
-        Message(
-          message: "Error: Unable to get response",
-          sendTime: DateTime.now(),
-          fromChatGpt: true,
-        ),
-      );
-    } finally {
-      loadingViewModel.setLoading(false);
-    }
   }
 }

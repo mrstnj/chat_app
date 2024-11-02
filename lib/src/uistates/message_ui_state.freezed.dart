@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Message {
   String get message => throw _privateConstructorUsedError;
   DateTime get sendTime => throw _privateConstructorUsedError;
-  bool get fromChatGpt => throw _privateConstructorUsedError;
+  bool get fromOthers => throw _privateConstructorUsedError;
 
   /// Create a copy of Message
   /// with the given fields replaced by the non-null parameter values.
@@ -31,7 +31,7 @@ abstract class $MessageCopyWith<$Res> {
   factory $MessageCopyWith(Message value, $Res Function(Message) then) =
       _$MessageCopyWithImpl<$Res, Message>;
   @useResult
-  $Res call({String message, DateTime sendTime, bool fromChatGpt});
+  $Res call({String message, DateTime sendTime, bool fromOthers});
 }
 
 /// @nodoc
@@ -51,7 +51,7 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
   $Res call({
     Object? message = null,
     Object? sendTime = null,
-    Object? fromChatGpt = null,
+    Object? fromOthers = null,
   }) {
     return _then(_value.copyWith(
       message: null == message
@@ -62,9 +62,9 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
           ? _value.sendTime
           : sendTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      fromChatGpt: null == fromChatGpt
-          ? _value.fromChatGpt
-          : fromChatGpt // ignore: cast_nullable_to_non_nullable
+      fromOthers: null == fromOthers
+          ? _value.fromOthers
+          : fromOthers // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -77,7 +77,7 @@ abstract class _$$MessageImplCopyWith<$Res> implements $MessageCopyWith<$Res> {
       __$$MessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String message, DateTime sendTime, bool fromChatGpt});
+  $Res call({String message, DateTime sendTime, bool fromOthers});
 }
 
 /// @nodoc
@@ -95,7 +95,7 @@ class __$$MessageImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
     Object? sendTime = null,
-    Object? fromChatGpt = null,
+    Object? fromOthers = null,
   }) {
     return _then(_$MessageImpl(
       message: null == message
@@ -106,9 +106,9 @@ class __$$MessageImplCopyWithImpl<$Res>
           ? _value.sendTime
           : sendTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      fromChatGpt: null == fromChatGpt
-          ? _value.fromChatGpt
-          : fromChatGpt // ignore: cast_nullable_to_non_nullable
+      fromOthers: null == fromOthers
+          ? _value.fromOthers
+          : fromOthers // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -120,18 +120,18 @@ class _$MessageImpl implements _Message {
   const _$MessageImpl(
       {required this.message,
       required this.sendTime,
-      required this.fromChatGpt});
+      required this.fromOthers});
 
   @override
   final String message;
   @override
   final DateTime sendTime;
   @override
-  final bool fromChatGpt;
+  final bool fromOthers;
 
   @override
   String toString() {
-    return 'Message(message: $message, sendTime: $sendTime, fromChatGpt: $fromChatGpt)';
+    return 'Message(message: $message, sendTime: $sendTime, fromOthers: $fromOthers)';
   }
 
   @override
@@ -142,12 +142,12 @@ class _$MessageImpl implements _Message {
             (identical(other.message, message) || other.message == message) &&
             (identical(other.sendTime, sendTime) ||
                 other.sendTime == sendTime) &&
-            (identical(other.fromChatGpt, fromChatGpt) ||
-                other.fromChatGpt == fromChatGpt));
+            (identical(other.fromOthers, fromOthers) ||
+                other.fromOthers == fromOthers));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message, sendTime, fromChatGpt);
+  int get hashCode => Object.hash(runtimeType, message, sendTime, fromOthers);
 
   /// Create a copy of Message
   /// with the given fields replaced by the non-null parameter values.
@@ -162,14 +162,14 @@ abstract class _Message implements Message {
   const factory _Message(
       {required final String message,
       required final DateTime sendTime,
-      required final bool fromChatGpt}) = _$MessageImpl;
+      required final bool fromOthers}) = _$MessageImpl;
 
   @override
   String get message;
   @override
   DateTime get sendTime;
   @override
-  bool get fromChatGpt;
+  bool get fromOthers;
 
   /// Create a copy of Message
   /// with the given fields replaced by the non-null parameter values.

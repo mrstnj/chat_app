@@ -1,7 +1,7 @@
 import 'package:chatapp/src/viewmodels/loading_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../uistates/ai_message_ui_state.dart';
+import '../uistates/message_ui_state.dart';
 import '../services/ai_chat_service.dart';
 
 part 'ai_message_view_model.g.dart';
@@ -9,15 +9,15 @@ part 'ai_message_view_model.g.dart';
 @riverpod
 class AiMessageViewModel extends _$AiMessageViewModel {
   @override
-  List<AiMessage> build() {
-    return const <AiMessage>[];
+  List<Message> build() {
+    return const <Message>[];
   }
 
-  void addMessage(AiMessage message) {
+  void addMessage(Message message) {
     state = [...state, message];
   }
 
-  void updateLastMessage(AiMessage message) {
+  void updateLastMessage(Message message) {
     state = [...state.sublist(0, state.length - 1), message];
   }
 
@@ -30,36 +30,36 @@ class AiMessageViewModel extends _$AiMessageViewModel {
     loadingViewModel.setLoading(true);
 
     addMessage(
-      AiMessage(
+      Message(
         message: message,
         sendTime: DateTime.now(),
-        fromChatGpt: false,
+        fromOthers: false,
       ),
     );
 
     addMessage(
-      AiMessage(
+      Message(
         message: '',
         sendTime: DateTime.now(),
-        fromChatGpt: true,
+        fromOthers: true,
       ),
     );
 
     try {
       final response = await chatService.sendMessage(message);
       updateLastMessage(
-        AiMessage(
+        Message(
           message: response.trim(),
           sendTime: DateTime.now(),
-          fromChatGpt: true,
+          fromOthers: true,
         ),
       );
     } catch (e) {
       updateLastMessage(
-        AiMessage(
+        Message(
           message: "Error: Unable to get response",
           sendTime: DateTime.now(),
-          fromChatGpt: true,
+          fromOthers: true,
         ),
       );
     } finally {
