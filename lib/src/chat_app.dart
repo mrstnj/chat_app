@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:chatapp/src/pages/ai_chat_page.dart';
+import 'package:chatapp/src/pages/chat_page.dart';
 import 'package:chatapp/src/routers/page.dart' as router;
 
 final _router = GoRouter(routes: [
   GoRoute(
     path: '/',
     redirect: (BuildContext context, GoRouterState state) {
-      return router.Page.aiChatPage.path;
+      return router.Page.chatPage.path;
     },
   ),
   GoRoute(
     path: router.Page.aiChatPage.path,
     builder:  (context, state) => const AiChatPage(),  
+  ),
+  GoRoute(
+    path: router.Page.chatPage.path,
+    builder:  (context, state) => const ChatPage(),  
   )
 ]);
 

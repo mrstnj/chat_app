@@ -1,5 +1,5 @@
 import 'package:chatapp/src/viewmodels/loading_view_model.dart';
-import 'package:chatapp/src/viewmodels/message_view_model.dart';
+import 'package:chatapp/src/viewmodels/ai_message_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,8 +28,8 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messageViewModel = ref.read(messageViewModelProvider.notifier);
-    final messages = ref.watch(messageViewModelProvider);
+    final messageViewModel = ref.read(aiMessageViewModelProvider.notifier);
+    final messages = ref.watch(aiMessageViewModelProvider);
     final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     final _textEditingController = TextEditingController();
