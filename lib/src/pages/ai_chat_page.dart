@@ -64,12 +64,12 @@ class _Body extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
-                          mainAxisAlignment: message.fromOthers
+                          mainAxisAlignment: message.fromChatGPT
                               ? MainAxisAlignment.start
                               : MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (message.fromOthers)
+                            if (message.fromChatGPT)
                               SizedBox(
                                   width: deviceWidth * 0.1,
                                   child: CircleAvatar(
@@ -82,7 +82,7 @@ class _Body extends ConsumerWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                if (!message.fromOthers)
+                                if (!message.fromChatGPT)
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),
@@ -94,7 +94,7 @@ class _Body extends ConsumerWidget {
                                         maxWidth: deviceWidth * 0.7),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16),
-                                      color: message.fromOthers
+                                      color: message.fromChatGPT
                                           ? colorOthersMessage
                                           : colorMyMessage,
                                     ),
@@ -110,7 +110,7 @@ class _Body extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                if (message.fromOthers)
+                                if (message.fromChatGPT)
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),

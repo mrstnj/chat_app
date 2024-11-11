@@ -32,16 +32,18 @@ class AiMessageViewModel extends _$AiMessageViewModel {
     addMessage(
       Message(
         message: message,
+        sendUser: '',
         sendTime: DateTime.now(),
-        fromOthers: false,
+        fromChatGPT: false,
       ),
     );
 
     addMessage(
       Message(
         message: '',
+        sendUser: '',
         sendTime: DateTime.now(),
-        fromOthers: true,
+        fromChatGPT: true,
       ),
     );
 
@@ -50,16 +52,18 @@ class AiMessageViewModel extends _$AiMessageViewModel {
       updateLastMessage(
         Message(
           message: response.trim(),
+          sendUser: '',
           sendTime: DateTime.now(),
-          fromOthers: true,
+          fromChatGPT: true,
         ),
       );
     } catch (e) {
       updateLastMessage(
         Message(
           message: "Error: Unable to get response",
+          sendUser: '',
           sendTime: DateTime.now(),
-          fromOthers: true,
+          fromChatGPT: true,
         ),
       );
     } finally {

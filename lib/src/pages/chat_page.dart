@@ -28,8 +28,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncMessages = ref.watch(getAllMessagesProvider);
-    print(asyncMessages);
+    ref.watch(getAllMessagesProvider);
     // final messageViewModel = ref.read(messageViewModelProvider.notifier);
     final messages = ref.watch(messageViewModelProvider);
     final isLoading = ref.watch(loadingViewModelProvider);
@@ -66,12 +65,12 @@ class _Body extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
-                          mainAxisAlignment: message.fromOthers
+                          mainAxisAlignment: message.sendUser == "Ken"
                               ? MainAxisAlignment.start
                               : MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (message.fromOthers)
+                            if (message.sendUser == "Ken")
                               SizedBox(
                                   width: deviceWidth * 0.1,
                                   child: CircleAvatar(
@@ -84,7 +83,7 @@ class _Body extends ConsumerWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                if (!message.fromOthers)
+                                if (message.sendUser != "Ken")
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),
@@ -96,7 +95,7 @@ class _Body extends ConsumerWidget {
                                         maxWidth: deviceWidth * 0.7),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16),
-                                      color: message.fromOthers
+                                      color: message.sendUser == "Ken"
                                           ? colorOthersMessage
                                           : colorMyMessage,
                                     ),
@@ -112,7 +111,7 @@ class _Body extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                if (message.fromOthers)
+                                if (message.sendUser == "Ken")
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),

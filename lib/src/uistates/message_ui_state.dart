@@ -7,13 +7,15 @@ class Message with _$Message {
   const factory Message({
     required String message,
     required DateTime sendTime,
-    required bool fromOthers,
+    required String sendUser,
+    required bool fromChatGPT,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       message: json['message'] as String,
-      fromOthers: json['from_others'],
+      fromChatGPT: json['from_others'],
+      sendUser: json['send_user'] as String,
       sendTime: DateTime.parse(json['send_time'] as String),
     );
   }

@@ -7,7 +7,7 @@ part of 'ai_message_view_model.dart';
 // **************************************************************************
 
 String _$aiMessageViewModelHash() =>
-    r'beff7ed518737344804a1fb7297ed45e753aa91b';
+    r'ebf4d1c2720c21c43fcfe01f84cbb91b1a024385';
 
 /// See also [AiMessageViewModel].
 @ProviderFor(AiMessageViewModel)
