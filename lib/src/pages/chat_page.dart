@@ -29,7 +29,7 @@ class _Body extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(getAllMessagesProvider);
-    // final messageViewModel = ref.read(messageViewModelProvider.notifier);
+    final messageViewModel = ref.read(messageViewModelProvider.notifier);
     final messages = ref.watch(messageViewModelProvider);
     final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -141,7 +141,7 @@ class _Body extends ConsumerWidget {
                             final message = _textEditingController.text;
                             if (message.trim().isNotEmpty) {
                               _textEditingController.clear();
-                              // messageViewModel.sendMessage(message);
+                              messageViewModel.sendMessage(message, "Ken");
                               _ScrollDown();
                             }
                           },
