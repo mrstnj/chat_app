@@ -7,10 +7,10 @@ https://qiita.com/q_hallelujah/private/24d5720ff7d07ba7996f
 
 ## 開発環境構築
 ```
-freezedやriverpodを追加した場合
+*freezedやriverpodを追加した場合
 $ dart run build_runner build
 
-エミュレータ起動後
+*エミュレータ起動後
 $ flutter run
 ```
 ### 動作確認
