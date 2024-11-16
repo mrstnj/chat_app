@@ -1,10 +1,10 @@
 import 'package:chatapp/src/viewmodels/loading_view_model.dart';
-import 'package:chatapp/src/viewmodels/ai_message_view_model.dart';
+import 'package:chatapp/src/viewmodels/message_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AiChatPage extends StatelessWidget {
-  const AiChatPage({super.key});
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,9 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messageViewModel = ref.read(aiMessageViewModelProvider.notifier);
-    final messages = ref.watch(aiMessageViewModelProvider);
+    ref.watch(getAllMessagesProvider);
+    final messageViewModel = ref.read(messageViewModelProvider.notifier);
+    final messages = ref.watch(messageViewModelProvider);
     final isLoading = ref.watch(loadingViewModelProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     final _textEditingController = TextEditingController();
@@ -47,7 +48,7 @@ class _Body extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('chatGPT'),
+        title: const Text('Person'),
       ),
       body: Center(
         child: Column(
@@ -64,12 +65,12 @@ class _Body extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
-                          mainAxisAlignment: message.fromChatGPT
+                          mainAxisAlignment: message.sendUser == "Ken"
                               ? MainAxisAlignment.start
                               : MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (message.fromChatGPT)
+                            if (message.sendUser == "Ken")
                               SizedBox(
                                   width: deviceWidth * 0.1,
                                   child: CircleAvatar(
@@ -77,12 +78,12 @@ class _Body extends ConsumerWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: Image.asset(
-                                            'assets/images/openai.png'),
+                                            'assets/images/user.png'),
                                       ))),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                if (!message.fromChatGPT)
+                                if (message.sendUser != "Ken")
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),
@@ -94,7 +95,7 @@ class _Body extends ConsumerWidget {
                                         maxWidth: deviceWidth * 0.7),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16),
-                                      color: message.fromChatGPT
+                                      color: message.sendUser == "Ken"
                                           ? colorOthersMessage
                                           : colorMyMessage,
                                     ),
@@ -110,7 +111,7 @@ class _Body extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                if (message.fromChatGPT)
+                                if (message.sendUser == "Ken")
                                   Text(
                                     _formatDateTime(message.sendTime),
                                     style: TextStyle(color: colorTime),
@@ -140,7 +141,7 @@ class _Body extends ConsumerWidget {
                             final message = _textEditingController.text;
                             if (message.trim().isNotEmpty) {
                               _textEditingController.clear();
-                              messageViewModel.sendMessage(message);
+                              messageViewModel.sendMessage(message, "Ken");
                               _ScrollDown();
                             }
                           },
