@@ -8,7 +8,7 @@ final _router = GoRouter(routes: [
   GoRoute(
     path: '/',
     redirect: (BuildContext context, GoRouterState state) {
-      return router.Page.chatPage.path;
+      return router.Page.aiChatPage.path;
     },
   ),
   GoRoute(

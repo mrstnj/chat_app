@@ -78,7 +78,7 @@ class _Body extends ConsumerWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: Image.asset(
-                                            'assets/images/openai.png'),
+                                            'assets/images/user.png'),
                                       ))),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
